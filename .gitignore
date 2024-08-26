@@ -1,0 +1,9 @@
+backend/venv/
+backend/pyvenv.cfg
+backend/__pycache__
+
+
+frontend/node_modules/
+frontend/build
+frontend/coverage
+
