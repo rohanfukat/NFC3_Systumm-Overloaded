@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from 'react'; // Import React and useState once
-import { Link } from 'react-router-dom'; // Import Link for routing
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './Dashboard.css';
 
 const endpoint = "http://localhost:8000/data"; // Endpoint for fetching data
@@ -9,8 +9,9 @@ const Dashboard = () => {
     { name: 'Rice', quantity: 5 } // Example of rice ordered
   ]);
   const [data, setData] = useState(null); // State to store fetched data
+  const [loading, setLoading] = useState(true); // Loading state
 
-
+  // Function to fetch data from the API
   const fetchData = async () => {
     try {
       const response = await fetch(endpoint, {
@@ -22,59 +23,77 @@ const Dashboard = () => {
       }
       const result = await response.json();
       setData(result); // Update state with fetched data
-      console.log(result)
+      setLoading(false);
     } catch (error) {
       console.error('There has been a problem with your fetch operation:', error);
+      setLoading(false); // Stop loading on error
     }
   };
 
-    // Function to handle URL changes
-    const handleUrlChange = () => {
-      fetchData(); // Fetch data for the fixed URL endpoint
-    };
-  
-    // Use useEffect to manage side effects
-    useEffect(() => {
-      // Add event listeners
-      window.addEventListener('popstate', handleUrlChange);
-      window.addEventListener('hashchange', handleUrlChange);
-  
-      // Initial data fetch
-      fetchData();
-  
-      // Clean up event listeners on component unmount
-      return () => {
-        window.removeEventListener('popstate', handleUrlChange);
-        window.removeEventListener('hashchange', handleUrlChange);
-      };
-    }, []);
+  // Use useEffect to fetch data on component mount
+  useEffect(() => {
+    fetchData(); // Initial data fetch
 
+    // Optionally add cleanup if needed (not required in this case)
+    return () => {
+      // Cleanup code if needed
+    };
+  }, []); // Empty dependency array ensures this runs only once on mount
+
+  // Determine available items based on background color
+  const determinePrices = () => {
+    if (data?.incomeColor === 'yellow') {
+      return {
+        Rice: { price: 3, quantity: 7 * (data?.familyMembers || 1) },
+        Wheat: { price: 2, quantity: 5 * (data?.familyMembers || 1) },
+        Sugar: { price: 20, quantity: 3 * (data?.familyMembers || 1) }
+      };
+    } else if (data?.incomeColor === 'orange') {
+      return {
+        Rice: { price: 5, quantity: 3 * (data?.familyMembers || 1) },
+        Wheat: { price: 3, quantity: 2 * (data?.familyMembers || 1) },
+        Sugar: { price: 20, quantity: 2 * (data?.familyMembers || 1) }
+      };
+    } else {
+      // Default values or handle other cases
+      return availableItems.reduce((acc, item) => {
+        acc[item.name] = { price: item.price, quantity: item.maxQuantity };
+        return acc;
+      }, {});
+    }
+  };
 
   const availableItems = [
-    { name: 'Rice', price: 3, maxQuantity: 15 },
-    { name: 'Wheat', price: 5, maxQuantity: 10 },
-    { name: 'Sugar', price: 6, maxQuantity: 5 },
+    { name: 'Rice', price: 0, maxQuantity: 0 },
+    { name: 'Wheat', price: 0, maxQuantity: 0 },
+    { name: 'Sugar', price: 0, maxQuantity: 0 },
   ];
 
-  
+  const prices = determinePrices();
 
-  // Calculate total available quantity
-  const calculateAvailableQuantity = (itemName) => {
-    const orderedItem = orderedItems.find(item => item.name === itemName);
-    const availableItem = availableItems.find(item => item.name === itemName);
-    return availableItem ? Math.max(availableItem.maxQuantity - (orderedItem ? orderedItem.quantity : 0), 0) : 0;
+  if (loading) {
+    return <div>Loading...</div>; // Show loading state while data is being fetched
+  }
+
+  // Use fetched data for user information
+  const userInfo = {
+    color: data?.incomeColor || '#fff', // Default color if not provided
+    name: data?.fullName || 'Unknown',
+    familyMembers: data?.familyMembers || 'N/A',
+    income: data?.income || 'N/A',
+    rationcard: data?.rationCardNumber || 'N/A'
   };
 
   return (
     <div className="dashboard-container">
       <h1 className="dashboard-heading">Dashboard</h1>
       
-      <div className="info-card">
+      <div className="info-card" style={{ backgroundColor: userInfo.color }}>
         <h2>User Information</h2>
-        <p><strong>Name:</strong> John Doe</p>
-        <p><strong>Ration Card Number:</strong> ABC123456</p>
-        <p><strong>Number of Family Members:</strong> 4</p>
-        <p><strong>Family Income:</strong> ₹50,000</p>
+        <p><strong>Name:</strong> {userInfo.name}</p>
+        <p><strong>Ration Card Number:</strong> {userInfo.rationcard}</p>
+        <p><strong>Number of Family Members:</strong> {userInfo.familyMembers}</p>
+        <p><strong>Family Income:</strong> ₹{userInfo.income}</p>
       </div>
 
       <Link to="/order" className="order-button">Order Now</Link>
@@ -110,11 +129,11 @@ const Dashboard = () => {
       <div className="available-items">
         <h3>Available Quantity</h3>
         <ul>
-          {availableItems.map(item => (
-            <li key={item.name}>
-              {item.name} - Price: ₹{item.price} per kg
+          {Object.entries(prices).map(([itemName, { price, quantity }]) => (
+            <li key={itemName}>
+              {itemName} - Price: ₹{price} per kg
               <br />
-              Available Quantity: {calculateAvailableQuantity(item.name)} kg
+              Available Quantity: {quantity} kg
             </li>
           ))}
         </ul>

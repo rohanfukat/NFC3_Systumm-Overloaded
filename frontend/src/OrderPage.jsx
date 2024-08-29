@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './OrderPage.css'; // Import CSS for styling
 
@@ -7,7 +7,11 @@ import sugarImg from './sugar.jpg';
 import wheatImg from './wheat.jpg';
 import riceImg from './rice.jpg';
 
+// Import PriceContext
+import { PriceContext } from './PriceContext'; // Adjust the import path if necessary
+
 const OrderPage = () => {
+  const { prices } = useContext(PriceContext); // Access the prices from context
   const [order, setOrder] = useState({
     sugar: 0,
     rice: 0,
@@ -15,13 +19,6 @@ const OrderPage = () => {
   });
 
   const navigate = useNavigate();
-
-  // Define prices per kg
-  const prices = {
-    sugar: 6,
-    rice: 3,
-    wheat: 5,
-  };
 
   // Handle quantity change for items
   const handleQuantityChange = (item, increment) => {
@@ -33,7 +30,7 @@ const OrderPage = () => {
 
   // Calculate total price for an item
   const getTotalPrice = (item) => {
-    return order[item] * prices[item];
+    return order[item] * (prices[item] || 0); // Use price from context
   };
 
   // Handle order confirmation and navigate to payment gateway
