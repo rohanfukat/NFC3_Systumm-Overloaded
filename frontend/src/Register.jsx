@@ -14,13 +14,20 @@ const RegistrationForm = () => {
     income: '',
     consent: false,
     privacyAgreement: false,
-    incomeColor: '', // Added to formData for submission
+    incomeColor: '',
+    password: '',
+    confirmPassword: '', // Added for password confirmation
+  });
+
+  // State to manage form validation errors
+  const [errors, setErrors] = useState({
+    passwordMatch: false,
   });
 
   // Handle input changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    
+
     setFormData((prevState) => ({
       ...prevState,
       [name]: type === 'checkbox' ? checked : value,
@@ -44,7 +51,7 @@ const RegistrationForm = () => {
       }
       setFormData((prevState) => ({
         ...prevState,
-        incomeColor: selectedColor, // Update incomeColor in formData
+        incomeColor: selectedColor,
       }));
     }
   };
@@ -67,6 +74,14 @@ const RegistrationForm = () => {
       return;
     }
 
+    // Check if passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setErrors({ ...errors, passwordMatch: true });
+      return;
+    } else {
+      setErrors({ ...errors, passwordMatch: false });
+    }
+
     // Create form data to send to backend
     const dataToSend = new FormData();
     Object.keys(formData).forEach((key) => {
@@ -74,13 +89,13 @@ const RegistrationForm = () => {
     });
 
     try {
-      const response = await fetch('http://localhost:8000/register', { // Change URL to your backend endpoint
+      const response = await fetch('http://localhost:8000/register', {
         method: 'POST',
         body: dataToSend,
       });
 
       if (response.ok) {
-        console.log('Form submitted successfully');
+        alert('Form submitted successfully'); // Show alert box on success
         // Clear form after submission
         setFormData({
           fullName: '',
@@ -94,13 +109,15 @@ const RegistrationForm = () => {
           income: '',
           consent: false,
           privacyAgreement: false,
-          incomeColor: '', // Reset incomeColor
+          incomeColor: '',
+          password: '',
+          confirmPassword: '', // Reset passwords
         });
       } else {
-        console.error('Form submission failed');
+        alert('Form submission failed'); // Show alert box on failure
       }
     } catch (error) {
-      console.error('Error:', error);
+      alert('Error: ' + error.message); // Show alert box on error
     }
   };
 
@@ -161,6 +178,20 @@ const RegistrationForm = () => {
         <div style={{ marginTop: '10px', padding: '10px', backgroundColor: formData.incomeColor }}>
           Selected income range color: {formData.incomeColor}
         </div>
+      )}
+
+      <div>
+        <label>Password:</label>
+        <input type="password" name="password" value={formData.password} onChange={handleChange} required />
+      </div>
+
+      <div>
+        <label>Confirm Password:</label>
+        <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
+      </div>
+
+      {errors.passwordMatch && (
+        <div style={{ color: 'red' }}>Passwords do not match!</div>
       )}
 
       <div>
