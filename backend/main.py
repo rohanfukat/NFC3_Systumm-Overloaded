@@ -3,8 +3,8 @@ from typing import Optional, List
 from datetime import date
 from bson.binary import Binary
 
-from fastapi import FastAPI, Body, HTTPException, status, UploadFile, File
-from fastapi.responses import Response
+from fastapi import FastAPI, Body, HTTPException, status, UploadFile, File, Form
+from fastapi.responses import Response, StreamingResponse
 from pydantic import ConfigDict, BaseModel, Field, EmailStr,constr
 from pydantic.functional_validators import BeforeValidator
 from fastapi.middleware.cors import CORSMiddleware
@@ -43,36 +43,20 @@ PyObjectId = Annotated[str, BeforeValidator(str)]
 
 class RegisterModel(BaseModel):
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
-    name: str = Field(...)
+    fullName: str = Field(...)
     dob: str = Field(...)  # validate dob in frontend
     address: str = Field(...)
-    no_of_family_members: int = Field(...)
-    ratio_card_no: constr(min_length=10,max_length=10) = Field(...)
-    adhar_no: constr(min_length=12,max_length=12) = Field(...)
-    phone_no: constr(min_length=10,max_length=10) = Field(...)
-    email: EmailStr = Field(...)
-    image : bytes
+    familyMembers: str = Field(...)
+    rationCardNumber: constr(min_length=10,max_length=10) = Field(...)
+    aadhaarNumber: constr(min_length=12,max_length=12) = Field(...)
+    phoneNumber: constr(min_length=10,max_length=10) = Field(...)
+    image : Optional[bytes] = None
     image_filename: Optional[str] = None  
     image_content_type: Optional[str] = None
-    model_config = ConfigDict(
-        populate_by_name=True,
-        arbitrary_types_allowed=True,
-        json_schema_extra={
-            "example": {
-                "name": "John Doe",
-                "dob": "1990-01-01",
-                "address": "123 Main St",
-                "no_of_family_members": 4,
-                "ratio_card_no": "1234567890",
-                "adhar_no": "123456789012",
-                "phone_no": "0987654321",
-                "email": "john@example.com",
-                "image": "byte..",
-                "image_filename": "profile_picture.jpg",
-                "image_content_type": "image/jpeg"
-            }
-        },
-    )
+    incomeColor: str
+    income:str
+    consent: str
+    privacyAgreement: str
 
 
 class UpdateRegisterModel(BaseModel):
@@ -91,23 +75,46 @@ class RegisterCollection(BaseModel):
 @app.post(
     "/register/",
     response_description="Add new user",
-    response_model=RegisterModel,
-    status_code=status.HTTP_201_CREATED,
-    response_model_by_alias=False,
-    
+    status_code=status.HTTP_201_CREATED
+    # response_model_by_alias=False,
 )
-async def create_user(user: RegisterModel = Body(...)):
+async def create_user(fullName:str = Form(...),
+                      dob:str = Form(...),  # validate dob in frontend
+                      address: str = Form(...),
+                      familyMembers: str = Form(...),
+                      rationCardNumber: str = Form(...),
+                      aadhaarNumber: str = Form(...),
+                      phoneNumber: str = Form(...),           
+                      incomeColor: str = Form(...),
+                      income:str = Form(...),
+                      consent: str = Form(...),
+                      privacyAgreement: str = Form(...),
+                      document: UploadFile = File(...)
+):
     try:
-        # file_data = await file.read()
-
-        user_data = user.model_dump(by_alias=True,  exclude=["id"])
-
-    
+        file = await document.read()
+        print(file)
+        print(fullName ,dob,address, income,familyMembers,rationCardNumber,aadhaarNumber,phoneNumber,incomeColor,consent,privacyAgreement)
+        user_data = {
+            "fullName" : fullName,
+            "dob" : dob,
+            "address": address,
+            "income": income,
+            "familyMembers": familyMembers,
+            "rationCardNumber":rationCardNumber,
+            "aadhaarNumber" : aadhaarNumber,
+            "image" : Binary(file),
+            "phoneNumber" : phoneNumber,
+            "incomeColor" : incomeColor,
+            "consent" : consent,
+            "privacyAgreement" : privacyAgreement
+        }
         new_user = await ration_collection.insert_one(user_data)
         created_user = await ration_collection.find_one(
             {"_id": new_user.inserted_id}
         )
-        return created_user
+        name,color = created_user["fullName"],created_user["incomeColor"]
+        return name,color
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -128,7 +135,7 @@ async def upload_image(file: UploadFile = File(...), user_id: str = None):
     # Read the file
     file_data = await file.read()
 
-    user_data = await ration_collection.find_one({"ratio_card_no": user_id})
+    user_data = await ration_collection.find_one({"rationCardNumber": user_id})
     
     if user_data is None:
         return {"error": "User not found"}
@@ -140,7 +147,7 @@ async def upload_image(file: UploadFile = File(...), user_id: str = None):
     print(user_data)
 
 
-    await ration_collection.update_one({"ratio_card_no": user_id}, {"$set": user_data})
+    await ration_collection.update_one({"rationCardNumber": user_id}, {"$set": user_data})
 
     return {"message": "Image updated successfully"}
 
@@ -153,7 +160,7 @@ async def upload_image(file: UploadFile = File(...), user_id: str = None):
 )
 async def show_user(id: str):
     if (
-        user := await ration_collection.find_one({"ratio_card_no": id})
+        user := await ration_collection.find_one({"rationCardNumber": id})
     ) is not None:
         return user
 
@@ -171,7 +178,7 @@ async def update_user(id: str, update_data : UpdateRegisterModel):
 
     # Update the user
     result = await ration_collection.update_one(
-        {"ratio_card_no": id},
+        {"rationCardNumber": id},
         {"$set": update_data_dict}
     )
 
@@ -183,7 +190,7 @@ async def update_user(id: str, update_data : UpdateRegisterModel):
 
 @app.delete("/del-user/{id}", response_description="Delete a user")
 async def delete_student(id: str):
-    delete_result = await ration_collection.delete_one({"ratio_card_no": id})
+    delete_result = await ration_collection.delete_one({"rationCardNumber": id})
 
     if delete_result.deleted_count == 1:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
