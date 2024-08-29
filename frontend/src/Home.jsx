@@ -1,8 +1,10 @@
 import React from 'react';
 import './Home.css';
+import './Navbar';
 
 function Home() {
     return (
+        
         <div className="home-container">
             <header className="hero-section">
                 <div className="hero-content">
