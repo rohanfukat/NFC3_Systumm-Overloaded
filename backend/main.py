@@ -5,7 +5,7 @@ from bson.binary import Binary
 
 from fastapi import FastAPI, Body, HTTPException, status, UploadFile, File, Form
 from fastapi.responses import Response, StreamingResponse
-from pydantic import ConfigDict, BaseModel, Field, EmailStr,constr
+from pydantic import  BaseModel, Field, EmailStr,constr
 from pydantic.functional_validators import BeforeValidator
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -36,6 +36,7 @@ MONGODB_URL = "mongodb+srv://vedroh123:vedroh123@cluster1.wmosgp9.mongodb.net/?r
 
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_URL)
 db = client.rationcard
+orders_collection = db.get_collection("user_orders")
 ration_collection = db.get_collection("register")
 
 PyObjectId = Annotated[str, BeforeValidator(str)]
@@ -47,9 +48,9 @@ class RegisterModel(BaseModel):
     dob: str = Field(...)  # validate dob in frontend
     address: str = Field(...)
     familyMembers: str = Field(...)
-    rationCardNumber: str = Field(..., regex=r'^\d{10}$')
-    aadhaarNumber: str = Field(..., regex=r'^\d{12}$')
-    phoneNumber: str = Field(..., regex=r'^\d{10}$')
+    rationCardNumber: str = Field(..., pattern=r'^\d{10}$')
+    aadhaarNumber: str = Field(..., pattern=r'^\d{12}$')
+    phoneNumber: str = Field(..., pattern=r'^\d{10}$')
     image : Optional[bytes] = None
     image_filename: Optional[str] = None  
     image_content_type: Optional[str] = None
@@ -64,9 +65,9 @@ class UpdateRegisterModel(BaseModel):
     dob: str = Field(...)  # validate dob in frontend
     address: str = Field(...)
     familyMembers: str = Field(...)
-    rationCardNumber: str = Field(..., regex=r'^\d{10}$')
-    aadhaarNumber: str = Field(..., regex=r'^\d{12}$')
-    phoneNumber: str = Field(..., regex=r'^\d{10}$')
+    rationCardNumber: str = Field(..., pattern=r'^\d{10}$')
+    aadhaarNumber: str = Field(..., pattern=r'^\d{12}$')
+    phoneNumber: str = Field(..., pattern=r'^\d{10}$')
     image : Optional[bytes] = None
     image_filename: Optional[str] = None  
     image_content_type: Optional[str] = None
@@ -80,7 +81,6 @@ class RegisterCollection(BaseModel):
     "/register/",
     response_description="Add new user",
     status_code=status.HTTP_201_CREATED
-    # response_model_by_alias=False,
 )
 async def create_user(fullName:str = Form(...),
                       dob:str = Form(...),  # validate dob in frontend
@@ -113,6 +113,28 @@ async def create_user(fullName:str = Form(...),
             "consent" : consent,
             "privacyAgreement" : privacyAgreement
         }
+        if incomeColor=="yellow":
+            wheat = 2 * familyMembers
+            rice = 3 * familyMembers
+            sugar = 2 * familyMembers
+        if incomeColor=="orange":
+            wheat = 5 * familyMembers
+            rice = 7 * familyMembers
+            sugar = 3 * familyMembers
+        else:
+            sugar,wheat,rice = 0,0,0
+
+        order_data = {
+            "fullName" : fullName,
+            "rationCardNumber" : rationCardNumber,
+            "sugar":sugar,
+            "rice": rice,
+            "wheat":wheat
+        }
+        user_order = await orders_collection.insert_one(order_data)
+        await orders_collection.find_one(
+            {"_id": user_order.inserted_id}
+        )
         new_user = await ration_collection.insert_one(user_data)
         created_user = await ration_collection.find_one(
             {"_id": new_user.inserted_id}
@@ -132,6 +154,7 @@ async def create_user(fullName:str = Form(...),
 
 async def list_students():
     return RegisterCollection(users=await ration_collection.find().to_list(1000))
+
 
 
 @app.post("/upload/{id}")
@@ -200,3 +223,8 @@ async def delete_student(id: str):
         return Response(status_code=status.HTTP_204_NO_CONTENT)
 
     raise HTTPException(status_code=404, detail=f"Ration card {id} not found")
+
+
+@app.get("/orders")
+async def order():
+    pass

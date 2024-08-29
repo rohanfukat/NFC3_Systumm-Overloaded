@@ -6,6 +6,7 @@ import Signup from './Signup';
 import Dashboard from './Dashboard';
 import OrderPage from './OrderPage';
 import Navbar from './Navbar';
+import RegistrationForm  from './Register';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/order" element={<OrderPage />} />
+        <Route path="/register" element={<RegistrationForm />} />
       </Routes>
     </Router>
   );
