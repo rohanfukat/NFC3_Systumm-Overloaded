@@ -60,14 +60,18 @@ class RegisterModel(BaseModel):
 
 
 class UpdateRegisterModel(BaseModel):
-    name: Optional[str] = None
-    dob: Optional[str] = None  # validate dob in frontend
-    address: Optional[str] = None
-    no_of_family_members: Optional[int] = None
-    ration_card_no: Optional[constr(min_length=10, max_length=10)]
-    adhar_no: Optional[constr(min_length=12, max_length=12)]
-    phone_no: Optional[constr(min_length=10, max_length=10)]
-    email: Optional[EmailStr]
+    fullName: str = Field(...)
+    dob: str = Field(...)  # validate dob in frontend
+    address: str = Field(...)
+    familyMembers: str = Field(...)
+    rationCardNumber: str = Field(..., regex=r'^\d{10}$')
+    aadhaarNumber: str = Field(..., regex=r'^\d{12}$')
+    phoneNumber: str = Field(..., regex=r'^\d{10}$')
+    image : Optional[bytes] = None
+    image_filename: Optional[str] = None  
+    image_content_type: Optional[str] = None
+    incomeColor: str
+    income:str
 
 class RegisterCollection(BaseModel):
     user: List[RegisterModel]
