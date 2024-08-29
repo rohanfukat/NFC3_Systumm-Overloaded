@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react'; // Import React and useState once
+import { Link } from 'react-router-dom'; // Import Link for routing
 import './Dashboard.css';
 
 const Dashboard = () => {

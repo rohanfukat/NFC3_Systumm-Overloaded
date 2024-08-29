@@ -1,24 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Home.css';
 import './Navbar';
 
 function Home() {
+    useEffect(() => {
+        const aboutSection = document.querySelector('.about-section');
+        const handleScroll = () => {
+            const sectionTop = aboutSection.getBoundingClientRect().top;
+            const sectionHeight = aboutSection.offsetHeight;
+            const windowHeight = window.innerHeight;
+
+            if (sectionTop < windowHeight && sectionTop + sectionHeight > 0) {
+                // Element is in view
+                aboutSection.classList.add('highlight');
+            } else {
+                // Element is out of view
+                aboutSection.classList.remove('highlight');
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // Call it initially in case the section is already in view
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        
         <div className="home-container">
             <header className="hero-section">
                 <div className="hero-content">
                     <h1>Welcome to the Digital Ration System</h1>
                     <p>Enhancing the efficiency, transparency, and security of the ration card system in urban slum areas.</p>
-                </div>
-                <div className="apply-form">
-                    <h3>Start Using the System!</h3>
-                    <form>
-                        <input type="text" placeholder="Your Name" />
-                        <input type="email" placeholder="Email Address" />
-                        <input type="text" placeholder="Ration Card Number" />
-                        <button type="submit">Apply Now</button>
-                    </form>
                 </div>
             </header>
 
@@ -42,6 +54,35 @@ function Home() {
                         <p>Secure and seamless payment options for ease of transactions.</p>
                     </div>
                 </div>
+            </section>
+
+            {/* Separator line */}
+            <hr className="separator" />
+
+            <section className="about-section" id="about">
+                <h2>About Us</h2>
+                <p>At Digital Ration System, our mission is to revolutionize the ration card system, making it more efficient, transparent, and secure. We aim to enhance the lives of individuals in urban slum areas by providing them with a reliable system for accessing essential supplies.</p>
+                <p>We envision a future where technology bridges the gap between resources and those in need. By integrating cutting-edge technology into the ration distribution system, we strive to ensure that every individual has access to the support they require with the utmost transparency and efficiency.</p>
+                <p>Our core values include integrity, innovation, empathy, and excellence. We are committed to delivering high-quality solutions and services to improve the quality of life for those we serve.</p>
+            </section>
+
+            <section className="contact-section" id="contact">
+                <h2>Contact Us</h2>
+                <form className="contact-form">
+                    <div className="form-group">
+                        <label htmlFor="name">Name</label>
+                        <input type="text" id="name" name="name" required />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="email">Email</label>
+                        <input type="email" id="email" name="email" required />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="message">Message</label>
+                        <textarea id="message" name="message" rows="4" required></textarea>
+                    </div>
+                    <button type="submit">Send Message</button>
+                </form>
             </section>
 
             <footer className="footer">
