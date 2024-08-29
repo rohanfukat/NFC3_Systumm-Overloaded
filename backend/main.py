@@ -261,7 +261,7 @@ async def login(rationCardNumber: str = Form(...),password:str = Form(...)):
 
 
 @app.get("/data")
-async def order(request: Request,id:str = Cookie(None)):
+async def order(id:str = Cookie(None)):
     print("id:",id)
     user =  await ration_collection.find_one({"_id": ObjectId(id)})
     # print(user)
@@ -270,10 +270,27 @@ async def order(request: Request,id:str = Cookie(None)):
             "income":user["income"],"rationcard":user["rationCardNumber"]}
 
 
-@app.post("/update_order")
-async def update_order(request:Request):
-    id = request.cookies.get("id","defaultNone")
-    user =  await ration_collection.find_one({"rationCardNumber": id})
+@app.post("/process-payment")
+async def update_order(id:str = Cookie(None),rice: str = Form(...), wheat: str = Form(...), sugar: str= Form(...)):
+    print(id)
+    print(rice,wheat,sugar)
+    user =  await ration_collection.find_one({"_id": ObjectId(id)})
+    order = await orders_collection.find_one({"rationCardNumber":user["rationCardNumber"]})
+    data = {
+        "sugar": int(order["sugar"]) - int(sugar),
+        "rice" : int(order["rice"] )- int(rice),
+        "wheat" : int(order["wheat"]) - int(wheat)
+    }     
+    # Validataion is pending
+    print(order)
+    result = await orders_collection.update_one(
+        {"rationCardNumber": user["rationCardNumber"]},
+        {"$set": data}
+    )
+    if result.modified_count == 0:
+        raise HTTPException(status_code=500, detail="Failed to update order")
+
+    return {"status": "success", "message": "Order updated successfully","data":data}
 
     
 

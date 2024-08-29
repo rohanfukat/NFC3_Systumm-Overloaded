@@ -1,37 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
 const Inventory = () => {
-  // Initial inventory data
+  // Initial static inventory data
   const initialInventory = {
     rice: 1000,
     wheat: 500,
     sugar: 700,
   };
 
-  // State to store inventory and ordered quantities
-  const [inventory, setInventory] = useState(initialInventory);
+  // State to store ordered quantities fetched from the backend
   const [ordered, setOrdered] = useState({ rice: 0, wheat: 0, sugar: 0 });
+  const [loading, setLoading] = useState(true); // Loading state to handle data fetching
 
-  // Function to handle ordering of items
-  const handleOrderChange = (item, amount) => {
-    // Ensure the order amount does not exceed inventory
-    const newOrdered = Math.max(0, ordered[item] + amount);
-    const newInventory = inventory[item] - newOrdered;
+  // Fetch ordered data from backend when component mounts
+  useEffect(() => {
+    fetchOrderedData();
+  }, []);
 
-    if (newInventory >= 0) {
-      setOrdered((prevState) => ({ ...prevState, [item]: newOrdered }));
+  const fetchOrderedData = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/ordered'); // Adjust the endpoint as necessary
+      if (response.ok) {
+        const data = await response.json();
+        setOrdered(data.ordered);
+        console.log(data)
+      } else {
+        console.error('Failed to fetch ordered data');
+      }
+    } catch (error) {
+      console.error('Error fetching ordered data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   // Prepare data for pie charts
   const prepareChartData = (item) => [
-    { name: 'In Stock', value: inventory[item] - ordered[item] },
+    { name: 'In Stock', value: initialInventory[item] - ordered[item] },
     { name: 'Ordered Out', value: ordered[item] },
   ];
 
   // Colors for the pie chart slices
   const COLORS = ['#0088FE', '#FFBB28'];
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
@@ -57,11 +72,6 @@ const Inventory = () => {
             <Tooltip />
             <Legend />
           </PieChart>
-          <div>
-            <button onClick={() => handleOrderChange('rice', -10)}>-</button>
-            <span>{ordered.rice} kg</span>
-            <button onClick={() => handleOrderChange('rice', 10)}>+</button>
-          </div>
         </div>
 
         {/* Wheat Pie Chart */}
@@ -84,11 +94,6 @@ const Inventory = () => {
             <Tooltip />
             <Legend />
           </PieChart>
-          <div>
-            <button onClick={() => handleOrderChange('wheat', -10)}>-</button>
-            <span>{ordered.wheat} kg</span>
-            <button onClick={() => handleOrderChange('wheat', 10)}>+</button>
-          </div>
         </div>
 
         {/* Sugar Pie Chart */}
@@ -111,11 +116,6 @@ const Inventory = () => {
             <Tooltip />
             <Legend />
           </PieChart>
-          <div>
-            <button onClick={() => handleOrderChange('sugar', -10)}>-</button>
-            <span>{ordered.sugar} kg</span>
-            <button onClick={() => handleOrderChange('sugar', 10)}>+</button>
-          </div>
         </div>
       </div>
     </div>

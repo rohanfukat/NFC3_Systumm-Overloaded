@@ -11,7 +11,6 @@ import Inventory from './Inventory';
 import RegistrationForm from './Register';
 import PaymentGateway from './PaymentGateway';
 
-
 const AppContent = () => {
   const location = useLocation();
 
@@ -30,6 +29,7 @@ const AppContent = () => {
         <Route path="/order" element={<OrderPage />} />
         <Route path="/payment-gateway" element={<PaymentGateway />} />
         <Route path="/register" element={<RegistrationForm />} />
+        <Route path="/inventory" element={<Inventory />} />
       </Routes>
     </div>
   );

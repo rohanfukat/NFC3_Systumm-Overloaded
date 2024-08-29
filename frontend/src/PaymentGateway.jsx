@@ -100,9 +100,43 @@ const PaymentGateway = () => {
     setShowProcessingCard(false);
   };
 
-  const handleConfirmPayment = () => {
-    alert('Payment successful!');
-    navigate('/dashboard');
+  const handleConfirmPayment = async () => {
+    try {
+      const data = new FormData()
+      data.append("rice",order.rice)
+      data.append("wheat",order.wheat)
+      data.append("sugar",order.sugar)
+      console.log(document.cookie)
+
+      // const orderData = {
+      //   rice: order.rice,
+      //   wheat: order.wheat,
+      //   sugar: order.sugar,
+      //   totalPrice: totalPrice,
+      //   paymentMethod: paymentMethod,
+      //   mode: mode,
+      //   address: randomAddress,
+      // };
+
+      // Send data to the backend
+      const response = await fetch('http://localhost:8000/process-payment', {
+        method: 'POST',
+        credentials : "include",
+        body: data,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        alert('Payment successful!');
+        // navigate('/dashboard');
+
+      } else {
+        alert('Payment failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred during payment processing.');
+    }
   };
 
   return (
