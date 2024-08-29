@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Login.css';
+import './Login.css'; // Import the new CSS file
 
 const endpoint = "http://localhost:8000/data"; // Endpoint for fetching data
 
@@ -84,11 +84,10 @@ const LoginPage = () => {
     }
   };
 
-  
-  const handleResetPassword = () => {
-    // Redirect to reset password page or handle reset logic
-    window.location.href = '/reset-password'; // Replace with actual route
-  };
+  // const handleResetPassword = () => {
+  //   // Redirect to reset password page or handle reset logic
+  //   window.location.href = '/reset-password'; // Replace with actual route
+  // };
 
   const handleSignupRedirect = () => {
     // Redirect to signup page
@@ -96,42 +95,44 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
+    <div className="login-background">
+      <div className="login-card">
+        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <div>
+            <label htmlFor="rationCardNumber">Ration Card Number:</label>
+            <input
+              type="text"
+              id="rationCardNumber"
+              name="rationCardNumber"
+              placeholder="Enter your Ration Card Number"
+              value={rationCardNumber}
+              onChange={(e) => setRationCardNumber(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit">Login</button>
+        </form>
         <div>
-          <label htmlFor="rationCardNumber">Ration Card Number:</label>
-          <input
-            type="text"
-            id="rationCardNumber"
-            name="rationCardNumber"
-            placeholder="Enter your Ration Card Number"
-            value={rationCardNumber}
-            onChange={(e) => setRationCardNumber(e.target.value)}
-            required
-          />
+          {/* <button onClick={handleResetPassword}>Reset Password</button> */}
+          <button onClick={handleSignupRedirect}>Register</button>
         </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Enter your Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+        <div id="content">
+          {/* Render fetched data here */}
+          {data ? <pre>{JSON.stringify(data, null, 2)}</pre> : 'Loading data...'}
         </div>
-        <button type="submit">Login</button>
-      </form>
-      <div>
-        <button onClick={handleResetPassword}>Reset Password</button>
-        <button onClick={handleSignupRedirect}>Signup</button>
-      </div>
-      <div id="content">
-        {/* Render fetched data here */}
-        {data ? <pre>{JSON.stringify(data, null, 2)}</pre> : 'Loading data...'}
       </div>
     </div>
   );
