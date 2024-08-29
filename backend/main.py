@@ -47,9 +47,9 @@ class RegisterModel(BaseModel):
     dob: str = Field(...)  # validate dob in frontend
     address: str = Field(...)
     familyMembers: str = Field(...)
-    rationCardNumber: constr(min_length=10,max_length=10) = Field(...)
-    aadhaarNumber: constr(min_length=12,max_length=12) = Field(...)
-    phoneNumber: constr(min_length=10,max_length=10) = Field(...)
+    rationCardNumber: str = Field(..., regex=r'^\d{10}$')
+    aadhaarNumber: str = Field(..., regex=r'^\d{12}$')
+    phoneNumber: str = Field(..., regex=r'^\d{10}$')
     image : Optional[bytes] = None
     image_filename: Optional[str] = None  
     image_content_type: Optional[str] = None
