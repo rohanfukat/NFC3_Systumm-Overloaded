@@ -1,0 +1,104 @@
+/* Container for the entire dashboard page */
+.dashboard-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Dashboard heading styles */
+  .dashboard-heading {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Info card styles */
+  .info-card {
+    background-color: yellow;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .info-card h2 {
+    margin-bottom: 10px;
+  }
+  
+  .info-card p {
+    margin: 5px 0;
+  }
+  
+  /* Order button styles */
+  .order-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .order-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Order summary section styles */
+  .order-summary {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .ordered-items,
+  .in-your-cart {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    width: 48%; /* Adjust width to fit side by side */
+  }
+  
+  .ordered-items h3,
+  .in-your-cart h3 {
+    margin-bottom: 10px;
+  }
+  
+  .ordered-items ul,
+  .in-your-cart ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .ordered-items li,
+  .in-your-cart li {
+    margin: 5px 0;
+  }
+  
+  /* Available items styles */
+  .available-items {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .available-items h3 {
+    margin-bottom: 10px;
+  }
+  
+  .available-items ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .available-items li {
+    margin: 5px 0;
+  }
+  

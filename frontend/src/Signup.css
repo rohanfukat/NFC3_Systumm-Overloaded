@@ -1,0 +1,147 @@
+/* Container for the entire signup page */
+.signup-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
+    text-align: center;
+  }
+  
+  /* Heading of the signup page */
+  .signup-heading {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  /* Form container */
+  .signup-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Name input group */
+  .input-group-name {
+    margin-bottom: 15px;
+  }
+  
+  /* Label for name */
+  .label-name {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  /* Input for name */
+  .input-name {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Email input group */
+  .input-group-email {
+    margin-bottom: 15px;
+  }
+  
+  /* Label for email */
+  .label-email {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  /* Input for email */
+  .input-email {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Password input group */
+  .input-group-password {
+    margin-bottom: 15px;
+  }
+  
+  /* Label for password */
+  .label-password {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  /* Input for password */
+  .input-password {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Confirm password input group */
+  .input-group-confirm-password {
+    margin-bottom: 15px;
+  }
+  
+  /* Label for confirm password */
+  .label-confirm-password {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  /* Input for confirm password */
+  .input-confirm-password {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Signup button */
+  .signup-button {
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  /* Container for login redirect text and link */
+  .login-redirect-container {
+    margin-top: 20px;
+  }
+  
+  /* Text asking if user already has an account */
+  .login-redirect-text {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  /* Link to redirect to login page */
+  .login-redirect-link {
+    color: #007BFF;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .login-redirect-link:hover {
+    text-decoration: underline;
+  }
+  
