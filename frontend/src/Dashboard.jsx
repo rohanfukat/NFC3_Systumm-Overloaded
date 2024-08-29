@@ -23,6 +23,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <h1 className="dashboard-heading">Dashboard</h1>
+      
       <div className="info-card">
         <h2>User Information</h2>
         <p><strong>Name:</strong> John Doe</p>
@@ -30,7 +31,9 @@ const Dashboard = () => {
         <p><strong>Number of Family Members:</strong> 4</p>
         <p><strong>Family Income:</strong> ₹50,000</p>
       </div>
+
       <Link to="/order" className="order-button">Order Now</Link>
+
       <div className="order-summary">
         <div className="ordered-items">
           <h3>Ordered Items</h3>
@@ -44,6 +47,7 @@ const Dashboard = () => {
             )}
           </ul>
         </div>
+
         <div className="in-your-cart">
           <h3>In Your Cart</h3>
           <ul>
@@ -57,6 +61,7 @@ const Dashboard = () => {
           </ul>
         </div>
       </div>
+
       <div className="available-items">
         <h3>Available Quantity</h3>
         <ul>

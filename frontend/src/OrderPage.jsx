@@ -1,27 +1,45 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './OrderPage.css'; // Import CSS for styling
 
+// Import images
+import sugarImg from './sugar.jpg';
+import wheatImg from './wheat.jpg';
+import riceImg from './rice.jpg';
+
 const OrderPage = () => {
-  // State to track the quantity of each item
   const [order, setOrder] = useState({
     sugar: 0,
     rice: 0,
     wheat: 0,
   });
 
-  // Function to handle quantity change
+  const navigate = useNavigate();
+
+  // Define prices per kg
+  const prices = {
+    sugar: 6,
+    rice: 3,
+    wheat: 5,
+  };
+
+  // Handle quantity change for items
   const handleQuantityChange = (item, increment) => {
     setOrder((prevState) => ({
       ...prevState,
-      [item]: Math.max(prevState[item] + increment, 0), // Prevents negative values
+      [item]: Math.max(prevState[item] + increment, 0), // Prevent negative values
     }));
   };
 
-  // Function to handle order confirmation
+  // Calculate total price for an item
+  const getTotalPrice = (item) => {
+    return order[item] * prices[item];
+  };
+
+  // Handle order confirmation and navigate to payment gateway
   const handleConfirmOrder = () => {
     console.log('Order confirmed:', order);
-    alert('Order confirmed:\nSugar: ${order.sugar} kg\nRice: ${order.rice} kg\nWheat: ${order.wheat} kg');
-    // Here you can send the order to the backend or perform further actions
+    navigate('/payment-gateway', { state: { order } }); // Navigate to payment gateway with order details
   };
 
   return (
@@ -30,6 +48,7 @@ const OrderPage = () => {
       <div className="cards-container">
         {/* Sugar Card */}
         <div className="order-card">
+          <img src={sugarImg} alt="Sugar" className="product-image" />
           <h2>Sugar</h2>
           <p>Select Quantity (kg):</p>
           <div className="counter">
@@ -37,10 +56,12 @@ const OrderPage = () => {
             <span>{order.sugar}</span>
             <button onClick={() => handleQuantityChange('sugar', 1)}>+</button>
           </div>
+          <p className="item-total">Total: ₹{getTotalPrice('sugar')}</p>
         </div>
 
         {/* Rice Card */}
         <div className="order-card">
+          <img src={riceImg} alt="Rice" className="product-image" />
           <h2>Rice</h2>
           <p>Select Quantity (kg):</p>
           <div className="counter">
@@ -48,10 +69,12 @@ const OrderPage = () => {
             <span>{order.rice}</span>
             <button onClick={() => handleQuantityChange('rice', 1)}>+</button>
           </div>
+          <p className="item-total">Total: ₹{getTotalPrice('rice')}</p>
         </div>
 
         {/* Wheat Card */}
         <div className="order-card">
+          <img src={wheatImg} alt="Wheat" className="product-image" />
           <h2>Wheat</h2>
           <p>Select Quantity (kg):</p>
           <div className="counter">
@@ -59,6 +82,7 @@ const OrderPage = () => {
             <span>{order.wheat}</span>
             <button onClick={() => handleQuantityChange('wheat', 1)}>+</button>
           </div>
+          <p className="item-total">Total: ₹{getTotalPrice('wheat')}</p>
         </div>
       </div>
 
