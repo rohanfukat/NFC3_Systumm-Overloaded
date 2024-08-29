@@ -10,19 +10,21 @@ const LoginPage = () => {
     event.preventDefault();
 
     // Create a JSON object with login credentials
-    const loginData = {
-      rationCardNumber: rationCardNumber,
-      password: password,
-    };
+    const loginData = new FormData()
+    loginData.append("rationCardNumber", rationCardNumber)
+    loginData.append("password",password)
+    console.log(loginData)
+    // const loginData = {
+    //   rationCardNumber: rationCardNumber,
+    //   password: password,
+    // };
 
     try {
       // Send POST request to the backend API
-      const response = await fetch('http://localhost:8000/login', { // Replace with your backend URL
+      const response = await fetch('http://127.0.0.1:8000/login', { // Replace with your backend URL
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(loginData),
+        // body: JSON.stringify(loginData),
+        body:loginData
       });
 
       if (response.ok) {

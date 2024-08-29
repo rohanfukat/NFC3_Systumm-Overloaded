@@ -3,7 +3,8 @@ from typing import Optional, List
 from datetime import date
 from bson.binary import Binary
 
-from fastapi import FastAPI, Body, HTTPException, status, UploadFile, File, Form
+from passlib.context import CryptContext
+from fastapi import FastAPI, Body, HTTPException, status, UploadFile, File, Form, Request
 from fastapi.responses import Response, StreamingResponse
 from pydantic import  BaseModel, Field, EmailStr,constr
 from pydantic.functional_validators import BeforeValidator
@@ -30,6 +31,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 MONGODB_URL = "mongodb+srv://vedroh123:vedroh123@cluster1.wmosgp9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1"
 
@@ -40,6 +42,13 @@ orders_collection = db.get_collection("user_orders")
 ration_collection = db.get_collection("register")
 
 PyObjectId = Annotated[str, BeforeValidator(str)]
+
+
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
 
 
 class RegisterModel(BaseModel):
@@ -93,7 +102,8 @@ async def create_user(fullName:str = Form(...),
                       income:str = Form(...),
                       consent: str = Form(...),
                       privacyAgreement: str = Form(...),
-                      document: UploadFile = File(...)
+                      document: UploadFile = File(...),
+                      confirmPassword:str=Form(...)
 ):
     try:
         file = await document.read()
@@ -111,7 +121,8 @@ async def create_user(fullName:str = Form(...),
             "phoneNumber" : phoneNumber,
             "incomeColor" : incomeColor,
             "consent" : consent,
-            "privacyAgreement" : privacyAgreement
+            "privacyAgreement" : privacyAgreement,
+            "password":hash_password(confirmPassword)
         }
         if incomeColor=="yellow":
             wheat = 2 * familyMembers
@@ -224,7 +235,25 @@ async def delete_student(id: str):
 
     raise HTTPException(status_code=404, detail=f"Ration card {id} not found")
 
+@app.post("/login")
+async def login(rationCardNumber: str = Form(...),password:str = Form(...)):
+        print(rationCardNumber,password)
+        user = await ration_collection.find_one({"rationCardNumber": rationCardNumber})
+        
+        if user is None:
+            print("user is not found")
+            raise HTTPException(status_code=404, detail="Invalid username or password")
+        
+        # print(verify_password(password, user["password"]))
+        result = verify_password(password, user["password"])
+        if  result == False:
+            raise HTTPException(status_code=404, detail="Invalid username or password")
+
 
 @app.get("/orders")
-async def order():
-    pass
+async def order(request:Request):
+    id = request.cookies.get("id","defaultNone")
+    print("id "+id)
+    user =  await ration_collection.find_one({"rationCardNumber": id})
+    return {"color":user["incomeColor"],"name":user["fullName"]}
+
