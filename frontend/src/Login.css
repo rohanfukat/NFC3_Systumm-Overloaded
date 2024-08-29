@@ -1,107 +1,125 @@
-/* Container for the entire login page */
+/* Ensure the login container is set up correctly */
 .login-container {
-  width: 100%;
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  background-color: #fff;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 5px;
+  box-sizing: border-box;
+  position: relative; /* Needed for absolute positioning of the pseudo-element */
+  overflow: hidden; /* Prevents any overflow of the pseudo-element */
 }
 
-/* Heading of the login page */
-.login-heading {
+/* Pseudo-element for the blurred background */
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('loginbg.jpg'); /* Ensure the correct path to your image */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  filter: blur(2px); /* Apply blur effect */
+  z-index: -1; /* Place the pseudo-element behind the content */
+}
+
+/* Card styling */
+.login-card {
+  background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1; /* Ensure card is above the blurred background */
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+  position: relative; /* Ensure relative positioning for z-index */
+}
+
+/* Styling for heading */
+h2 {
+  color: #007bff;
   margin-bottom: 20px;
-  font-size: 24px;
+  text-align: center; /* Center the heading */
+}
+
+/* Form styling */
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Styling for form elements */
+div {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
   color: #333;
 }
 
-/* Form container */
-.login-form {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Ration Card input group */
-.input-group-ration {
-  margin-bottom: 15px;
-}
-
-/* Label for ration card */
-.label-ration {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 14px;
-  color: #555;
-}
-
-/* Input for ration card */
-.input-ration {
+input[type="text"],
+input[type="password"] {
   width: 100%;
   padding: 10px;
-  font-size: 14px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
 
-/* Password input group */
-.input-group-password {
-  margin-bottom: 15px;
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: #007bff; /* Blue border on focus */
 }
 
-/* Label for password */
-.label-password {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 14px;
-  color: #555;
-}
-
-/* Input for password */
-.input-password {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-}
-
-/* Login button */
-.login-button {
-  padding: 10px;
-  background-color: #007BFF;
-  color: #fff;
+button {
+  padding: 15px;
   border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button[type="submit"] {
+  background-color: #007bff; /* Blue background */
+  color: white;
   margin-top: 10px;
 }
 
-/* Options container for reset password and signup */
-.options-container {
+button[type="submit"]:hover {
+  background-color: #0056b3; /* Darker blue */
+  transform: scale(1.05);
+}
+
+.secondary {
+  background-color: #e9ecef; /* Light gray background */
+  color: #495057;
+  margin: 5px auto; /* Center the button horizontally */
+  display: block; /* Ensure the button is treated as a block element */
+  text-align: center; /* Center the text inside the button */
+}
+
+.secondary:hover {
+  background-color: #ced4da; /* Slightly darker gray */
+}
+
+button:focus {
+  outline: none;
+}
+
+.button-group {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-/* Reset button */
-.reset-button {
-  background-color: transparent;
-  border: none;
-  color: #007BFF;
-  cursor: pointer;
-  font-size: 14px;
-  text-decoration: underline;
-}
-
-/* Signup button (styled as a link) */
-.signup-button {
-  background-color: transparent;
-  border: none;
-  color: #007BFF;
-  cursor: pointer;
-  font-size: 14px;
-  text-decoration: underline;
+  justify-content: center;
 }

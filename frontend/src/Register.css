@@ -1,92 +1,105 @@
-/* Container for the entire registration form */
+/* Container for the entire form */
 .registration-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    background-color: #fff;
-    text-align: center;
-  }
-  
-  /* Heading of the registration form */
-  .registration-heading {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
-  }
-  
-  /* Form container */
-  .registration-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  /* Label for inputs */
-  .input-label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 14px;
-    color: #555;
-  }
-  
-  /* Input fields */
-  .input-field {
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-  }
-  
-  /* File input field */
-  .file-input {
-    margin-top: 10px;
-  }
-  
-  /* Select field */
-  .select-field {
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-  }
-  
-  /* Checkbox labels */
-  .checkbox-label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 14px;
-    color: #555;
-  }
-  
-  /* Password and Confirm Password input group */
-  .password-group {
-    margin-bottom: 15px;
-  }
-  
-  /* Error message */
-  .error-message {
-    color: red;
-    margin-top: 10px;
-  }
-  
-  /* Submit button */
-  .submit-button {
-    padding: 10px;
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  /* Submit button hover effect */
-  .submit-button:hover {
-    background-color: #0056b3;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  background-color: gray; /* Optional: background color for better visibility */
+}
+
+/* Styling for each card */
+.card {
+  display: none;
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  position: absolute; /* Positioning the card absolutely within the container */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Offset to account for the card's own dimensions */
+}
+
+/* Show the active card */
+.card.active {
+  display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1); /* Ensure the card is centered and scaled normally */
+}
+
+/* Header inside each card */
+.card h2 {
+  margin-top: 0;
+}
+
+/* Label styling */
+.card label {
+  display: block;
+  margin: 15px 0 5px;
+  font-weight: bold;
+}
+
+/* Input fields styling */
+.card input[type="text"],
+.card input[type="date"],
+.card input[type="password"],
+.card select,
+.card input[type="file"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+/* Error message styling */
+.error {
+  color: red;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+/* Navigation buttons styling */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.nav-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.nav-buttons button.prev {
+  background-color: #6c757d;
+}
+
+/* Styling for selected income color display */
+.income-color-display {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* Styling for checkboxes */
+.card input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+/* Styling for submit button */
+.card button[type="submit"] {
+  background-color: #28a745;
+}

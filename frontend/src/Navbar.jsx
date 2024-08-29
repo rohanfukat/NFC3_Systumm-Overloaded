@@ -19,7 +19,7 @@ function Navbar() {
 
             <div className="nav-buttons">
                 <a href="/login" className="login-btn">Log In</a>
-                <a href="/Register" className="apply-btn">Sign Up</a>
+                <a href="/Register" className="apply-btn">Register</a>
             </div>
         </nav>
     );

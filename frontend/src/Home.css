@@ -58,7 +58,7 @@
     z-index: 1;
     /* Ensure content is above the background */
     animation: zoomIn 1.2s ease-out;
-    background-image: url('/src/background.jpg');
+    background-image: url('background.jpg');
     width: fit-content;
 }
 

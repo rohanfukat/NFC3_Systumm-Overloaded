@@ -14,14 +14,10 @@ const LoginPage = () => {
     console.log('Password:', password);
 
     // Create a JSON object with login credentials
-    const loginData = new FormData()
-    loginData.append("rationCardNumber", rationCardNumber)
-    loginData.append("password",password)
-    console.log(loginData)
-    // const loginData = {
-    //   rationCardNumber: rationCardNumber,
-    //   password: password,
-    // };
+    const loginData = new FormData();
+    loginData.append('rationCardNumber', rationCardNumber);
+    loginData.append('password', password);
+    console.log(loginData);
 
     try {
       // Send POST request to the backend API
@@ -53,49 +49,45 @@ const LoginPage = () => {
     }
   };
 
-  const handleResetPassword = () => {
-    // Redirect to reset password page or handle reset logic
-    window.location.href = '/reset-password'; // Replace with actual route
-  };
-
   const handleSignupRedirect = () => {
     // Redirect to signup page
-    window.location.href = '/signup'; // Replace with actual route
+    window.location.href = './Register'; // Replace with actual route
   };
 
   return (
     <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="rationCardNumber">Ration Card Number:</label>
-          <input
-            type="text"
-            id="rationCardNumber"
-            name="rationCardNumber"
-            placeholder="Enter your Ration Card Number"
-            value={rationCardNumber} // Bind input value to state
-            onChange={(e) => setRationCardNumber(e.target.value)} // Update state on input change
-            required
-          />
+      <div className="login-card">
+        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <div>
+            <label htmlFor="rationCardNumber">Ration Card Number:</label>
+            <input
+              type="text"
+              id="rationCardNumber"
+              name="rationCardNumber"
+              placeholder="Enter your Ration Card Number"
+              value={rationCardNumber} // Bind input value to state
+              onChange={(e) => setRationCardNumber(e.target.value)} // Update state on input change
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your Password"
+              value={password} // Bind input value to state
+              onChange={(e) => setPassword(e.target.value)} // Update state on input change
+              required
+            />
+          </div>
+          <button type="submit">Login</button>
+        </form>
+        <div className="button-group">
+          <button className="secondary" onClick={handleSignupRedirect}>Registration form</button>
         </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Enter your Password"
-            value={password} // Bind input value to state
-            onChange={(e) => setPassword(e.target.value)} // Update state on input change
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      <div>
-        <button className="secondary" onClick={handleResetPassword}>Reset Password</button>
-        <button className="secondary" onClick={handleSignupRedirect}>Signup</button>
       </div>
     </div>
   );
