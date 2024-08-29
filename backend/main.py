@@ -3,8 +3,9 @@ from typing import Optional, List
 from datetime import date
 from bson.binary import Binary
 
+from fastapi.responses import JSONResponse
 from passlib.context import CryptContext
-from fastapi import FastAPI, Body, HTTPException, status, UploadFile, File, Form, Request
+from fastapi import FastAPI, Body, HTTPException, status, UploadFile, File, Form, Request, Cookie
 from fastapi.responses import Response, StreamingResponse
 from pydantic import  BaseModel, Field, EmailStr,constr
 from pydantic.functional_validators import BeforeValidator
@@ -248,12 +249,31 @@ async def login(rationCardNumber: str = Form(...),password:str = Form(...)):
         result = verify_password(password, user["password"])
         if  result == False:
             raise HTTPException(status_code=404, detail="Invalid username or password")
+        
+        user_color = {"color":user["incomeColor"]}
+        # print(str(user["_id"]),user_color)
+
+        value = str(user["_id"])
+        # response = JSONResponse(user_color)
+        # response.set_cookie(key="id",value=value,max_age=18000,httponly=False,path="/login")
+        # print(response)
+        return {"user_color":user_color,"id":value}
 
 
-@app.get("/orders")
-async def order(request:Request):
+@app.get("/data")
+async def order(request: Request,id:str = Cookie(None)):
+    print("id:",id)
+    user =  await ration_collection.find_one({"_id": ObjectId(id)})
+    # print(user)
+    print(user["incomeColor"])
+    return {"color":user["incomeColor"],"name":user["fullName"],"familyMembers":user["familyMembers"],
+            "income":user["income"],"rationcard":user["rationCardNumber"]}
+
+
+@app.post("/update_order")
+async def update_order(request:Request):
     id = request.cookies.get("id","defaultNone")
-    print("id "+id)
     user =  await ration_collection.find_one({"rationCardNumber": id})
-    return {"color":user["incomeColor"],"name":user["fullName"]}
+
+    
 
