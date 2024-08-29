@@ -8,7 +8,7 @@ function Navbar() {
             <ul className="nav-links">
                 <li><a href="#features">Features</a></li>
                 <li><a href="#about">About Us</a></li>
-                <li><a href="#about">Inventory</a></li>
+                <li><a href="/Inventory">Inventory</a></li>
                 <li><a href="#contact">Contact Us</a></li>
 
 
@@ -17,7 +17,7 @@ function Navbar() {
 
             <div className="nav-buttons">
                 <a href="/login" className="login-btn">Log In</a>
-                <a href="/apply" className="apply-btn">Sign In</a>
+                <a href="/Register" className="apply-btn">Sign Up</a>
             </div>
         </nav>
     );

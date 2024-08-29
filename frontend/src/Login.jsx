@@ -9,6 +9,10 @@ const LoginPage = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
 
+    // Debugging: Log state to check if values are being set correctly
+    console.log('Ration Card Number:', rationCardNumber);
+    console.log('Password:', password);
+
     // Create a JSON object with login credentials
     const loginData = new FormData()
     loginData.append("rationCardNumber", rationCardNumber)
@@ -23,16 +27,19 @@ const LoginPage = () => {
       // Send POST request to the backend API
       const response = await fetch('http://127.0.0.1:8000/login', { // Replace with your backend URL
         method: 'POST',
-        // body: JSON.stringify(loginData),
-        body:loginData
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(loginData),
       });
 
       if (response.ok) {
-        const data = await response.json(); // Assuming the backend sends a JSON response
+        const data = await response.json(); // Assuming the backend sends a JSON response containing the user ID
+        
+        // Set a cookie with the MongoDB user ID
+        document.cookie = `userId=${data.userId}; path=/; SameSite=Lax`; // You can also add `; secure` if you're on HTTPS
 
-        // Handle successful login (e.g., set cookies, redirect, etc.)
         alert('Login successful!');
-        console.log('User data:', data);
         // Optionally, redirect to another page after login
         // window.location.href = '/dashboard';
       } else {
@@ -57,7 +64,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div>
@@ -67,8 +74,8 @@ const LoginPage = () => {
             id="rationCardNumber"
             name="rationCardNumber"
             placeholder="Enter your Ration Card Number"
-            value={rationCardNumber}
-            onChange={(e) => setRationCardNumber(e.target.value)}
+            value={rationCardNumber} // Bind input value to state
+            onChange={(e) => setRationCardNumber(e.target.value)} // Update state on input change
             required
           />
         </div>
@@ -79,16 +86,16 @@ const LoginPage = () => {
             id="password"
             name="password"
             placeholder="Enter your Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={password} // Bind input value to state
+            onChange={(e) => setPassword(e.target.value)} // Update state on input change
             required
           />
         </div>
         <button type="submit">Login</button>
       </form>
       <div>
-        <button onClick={handleResetPassword}>Reset Password</button>
-        <button onClick={handleSignupRedirect}>Signup</button>
+        <button className="secondary" onClick={handleResetPassword}>Reset Password</button>
+        <button className="secondary" onClick={handleSignupRedirect}>Signup</button>
       </div>
     </div>
   );

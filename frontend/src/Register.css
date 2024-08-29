@@ -1,0 +1,92 @@
+/* Container for the entire registration form */
+.registration-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
+    text-align: center;
+  }
+  
+  /* Heading of the registration form */
+  .registration-heading {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  /* Form container */
+  .registration-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Label for inputs */
+  .input-label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  /* Input fields */
+  .input-field {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  /* File input field */
+  .file-input {
+    margin-top: 10px;
+  }
+  
+  /* Select field */
+  .select-field {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Checkbox labels */
+  .checkbox-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  /* Password and Confirm Password input group */
+  .password-group {
+    margin-bottom: 15px;
+  }
+  
+  /* Error message */
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+  
+  /* Submit button */
+  .submit-button {
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  /* Submit button hover effect */
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  

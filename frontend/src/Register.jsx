@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './Register.css';
 
 const RegistrationForm = () => {
   // State to store form data

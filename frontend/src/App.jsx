@@ -7,6 +7,7 @@ import Dashboard from './Dashboard';
 import OrderPage from './OrderPage';
 import Navbar from './Navbar';
 import RegistrationForm  from './Register';
+import Inventory from './Inventory';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path='/Navbar' element={<Navbar />} />
+        <Route path='/Inventory' element={<Inventory />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
