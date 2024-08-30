@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { useNavigate } from 'react-router-dom'; // Assuming you're using react-router
+import './Inventory.css';
 
 const Inventory = () => {
   // Initial static inventory data

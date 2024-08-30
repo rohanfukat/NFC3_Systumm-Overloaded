@@ -1,0 +1,77 @@
+/* Inventory.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f5f7f9;
+    /* Light grey background */
+    min-height: 100vh;
+    /* Full height */
+}
+
+h2 {
+    color: #333;
+    /* Dark grey for main heading */
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.chart-row {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    flex-wrap: nowrap;
+    /* Prevent wrapping */
+    gap: 20px;
+    /* Space between charts */
+    margin-bottom: 20px;
+}
+
+.chart-box {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    flex: 1;
+    /* Allow charts to grow and shrink */
+    max-width: 300px;
+    /* Set a max width for each chart box */
+}
+
+.chart-box h3 {
+    color: #444;
+    /* Slightly lighter grey for subheadings */
+    margin-bottom: 10px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+button {
+    background-color: #0066cc;
+    /* Primary button color */
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 1em;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+    
+}
+
+button:hover {
+    background-color: #005bb5;
+    /* Darker shade on hover */
+}
+
+button:focus {
+    outline: none;
+}
