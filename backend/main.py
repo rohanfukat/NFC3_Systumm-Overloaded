@@ -108,28 +108,31 @@ async def create_user(fullName:str = Form(...),
 ):
     try:
         file = await document.read()
-        print(file)
+        # print(file)
         print(fullName ,dob,address, income,familyMembers,rationCardNumber,aadhaarNumber,phoneNumber,incomeColor,consent,privacyAgreement)
         user_data = {
-            "fullName" : fullName,
-            "dob" : dob,
-            "address": address,
-            "income": income,
-            "familyMembers": familyMembers,
-            "rationCardNumber":rationCardNumber,
-            "aadhaarNumber" : aadhaarNumber,
+            "fullName" : fullName.strip(),
+            "dob" : dob.strip(),
+            "address": address.strip(),
+            "income": income.strip(),
+            "familyMembers": familyMembers.strip(),
+            "rationCardNumber":rationCardNumber.strip(),
+            "aadhaarNumber" : aadhaarNumber.strip(),
             "image" : Binary(file),
-            "phoneNumber" : phoneNumber,
-            "incomeColor" : incomeColor,
-            "consent" : consent,
-            "privacyAgreement" : privacyAgreement,
+            "phoneNumber" : phoneNumber.strip(),
+            "incomeColor" : incomeColor.strip(),
+            "consent" : consent.strip(),
+            "privacyAgreement" : privacyAgreement.strip(),
             "password":hash_password(confirmPassword)
         }
-        if incomeColor=="yellow":
+        print("color:",incomeColor)
+        familyMembers = int(familyMembers)
+        print(type(familyMembers))
+        if incomeColor.strip() == "saffron":
             wheat = 2 * familyMembers
             rice = 3 * familyMembers
             sugar = 2 * familyMembers
-        if incomeColor=="orange":
+        elif incomeColor.strip() == "yellow":
             wheat = 5 * familyMembers
             rice = 7 * familyMembers
             sugar = 3 * familyMembers
@@ -137,8 +140,8 @@ async def create_user(fullName:str = Form(...),
             sugar,wheat,rice = 0,0,0
 
         order_data = {
-            "fullName" : fullName,
-            "rationCardNumber" : rationCardNumber,
+            "fullName" : fullName.strip(),
+            "rationCardNumber" : rationCardNumber.strip(),
             "sugar":sugar,
             "rice": rice,
             "wheat":wheat
@@ -275,11 +278,16 @@ async def update_order(id:str = Cookie(None),rice: str = Form(...), wheat: str =
     print(id)
     print(rice,wheat,sugar)
     user =  await ration_collection.find_one({"_id": ObjectId(id)})
+
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    print(user["rationCardNumber"])
     order = await orders_collection.find_one({"rationCardNumber":user["rationCardNumber"]})
     status  = (int(order["sugar"]) > int(sugar)) and (int(order["rice"]) > int(rice)) and (int(order["wheat"]) > int(wheat))
     if not status:
         print("failed")
-        raise HTTPException(status_code=404, detail="Failed to place order")
+        raise HTTPException(status_code=404, detail="Max food limit reached")
     else:
         data = {
             "sugar": int(order["sugar"]) - int(sugar),
