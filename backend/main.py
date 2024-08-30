@@ -290,7 +290,10 @@ async def update_order(id:str = Cookie(None),rice: str = Form(...), wheat: str =
     if result.modified_count == 0:
         raise HTTPException(status_code=500, detail="Failed to update order")
 
-    return {"status": "success", "message": "Order updated successfully","data":data}
+    return {"status": "success", "message": "Order updated successfully",
+            "sugar": sugar,
+            "rice" : rice,
+            "wheat" : wheat}
 
     
 

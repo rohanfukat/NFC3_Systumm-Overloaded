@@ -108,15 +108,6 @@ const PaymentGateway = () => {
       data.append("sugar",order.sugar)
       console.log(document.cookie)
 
-      // const orderData = {
-      //   rice: order.rice,
-      //   wheat: order.wheat,
-      //   sugar: order.sugar,
-      //   totalPrice: totalPrice,
-      //   paymentMethod: paymentMethod,
-      //   mode: mode,
-      //   address: randomAddress,
-      // };
 
       // Send data to the backend
       const response = await fetch('http://localhost:8000/process-payment', {
@@ -127,7 +118,10 @@ const PaymentGateway = () => {
 
       if (response.ok) {
         const result = await response.json();
+        console.log(result)
         alert('Payment successful!');
+        const params = new URLSearchParams(result).toString();
+        window.location.href = `http://localhost:3000/inventory?${params}`
         // navigate('/dashboard');
 
       } else {

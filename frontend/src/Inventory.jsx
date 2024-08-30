@@ -19,21 +19,32 @@ const Inventory = () => {
   }, []);
 
   const fetchOrderedData = async () => {
-    try {
-      const response = await fetch('http://localhost:8000/api/ordered'); // Adjust the endpoint as necessary
-      if (response.ok) {
-        const data = await response.json();
-        setOrdered(data.ordered);
-        console.log(data)
-      } else {
-        console.error('Failed to fetch ordered data');
-      }
-    } catch (error) {
-      console.error('Error fetching ordered data:', error);
-    } finally {
-      setLoading(false);
-    }
+    // try {
+    //   const response = await fetch('http://localhost:8000/process-payment'); // Adjust the endpoint as necessary
+    //   if (response.ok) {
+    //     const data = await response.json();
+    //     setOrdered(data.ordered);
+    //     console.log(data)
+        
+    //   } else {
+    //     console.error('Failed to fetch ordered data');
+    //   }
+    // } catch (error) {
+    //   console.error('Error fetching ordered data:', error);
+    // } finally {
+    //   setLoading(false);
+    const urlParams = new URLSearchParams(window.location.search);
+
+        // Iterate over the parameters and display them
+        let dashboardParams = '';
+        urlParams.forEach((value, key) => {
+            dashboardParams += `${key}: ${value}`;
+        });
+      
+        console.log(urlParams.get("status"))
+    // }
   };
+ 
 
   // Prepare data for pie charts
   const prepareChartData = (item) => [
