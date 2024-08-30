@@ -153,7 +153,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <h1 className="dashboard-heading">Dashboard</h1>
-      
+
       <div className="info-card" style={{ backgroundColor: userInfo.color }}>
         <h2>User Information</h2>
         <p><strong>Name:</strong> {userInfo.name}</p>
@@ -165,7 +165,7 @@ const Dashboard = () => {
       <Link to="/order" className="order-button">Order Now</Link>
 
       <div className="order-summary">
-        <h3>Order Summary</h3>
+        <h3>Order Summary..-</h3>
         {chartData.map((data, index) => (
           <div key={index} className="chart-container">
             <h4>{data.name}</h4>
@@ -189,7 +189,7 @@ const Dashboard = () => {
           </div>
         ))}
         <div className="available-items">
-          <h3>Available Quantity</h3>
+          <h3>Quantity Alloted By Government</h3>
           <ul>
             {Object.entries(prices).map(([itemName, { price, quantity }]) => (
               <li key={itemName}>
