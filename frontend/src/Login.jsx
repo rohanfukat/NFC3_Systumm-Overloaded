@@ -73,6 +73,7 @@ const LoginPage = () => {
         expireDate.setTime(expireDate.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 days from now
         const expires = "expires=" + expireDate.toUTCString();
         document.cookie = "id=" + data["id"] + "; " + expires + "; path=/";
+        window.location.href='/Dashboard';
       } else {
         // Handle login failure
         const errorData = await response.json(); // Fetch error message from response
@@ -131,7 +132,7 @@ const LoginPage = () => {
         </div>
         <div id="content">
           {/* Render fetched data here */}
-          {data ? <pre>{JSON.stringify(data, null, 2)}</pre> : 'Loading data...'}
+        
         </div>
       </div>
     </div>

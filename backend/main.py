@@ -128,7 +128,7 @@ async def create_user(fullName:str = Form(...),
         print("color:",incomeColor)
         familyMembers = int(familyMembers)
         print(type(familyMembers))
-        if incomeColor.strip() == "saffron":
+        if incomeColor.strip() == "orange":
             wheat = 2 * familyMembers
             rice = 3 * familyMembers
             sugar = 2 * familyMembers

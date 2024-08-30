@@ -39,7 +39,7 @@ const RegistrationForm = () => {
           selectedColor = 'yellow';
           break;
         case 'between 15000 to 1lakh':
-          selectedColor = 'saffron';
+          selectedColor = 'orange';
           break;
         case 'above 1 lakh':
           selectedColor = 'white';
