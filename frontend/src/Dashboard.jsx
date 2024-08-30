@@ -10,6 +10,7 @@ const Dashboard = () => {
   const [orderedItems, setOrderedItems] = useState([
     { name: 'Rice', quantity: 5 } // Example of rice ordered
   ]);
+  
   const [data, setData] = useState(null); // State to store fetched data
   const [loading, setLoading] = useState(true); // Loading state
   const [userInfo, setUserInfo] = useState({
@@ -18,6 +19,13 @@ const Dashboard = () => {
     rationcard: 'N/A',
     income: 'N/A',
   }); // State for user info
+
+  // State for URL parameters
+  const [urlParams, setUrlParams] = useState({
+    rice: 0,
+    wheat: 0,
+    sugar: 0
+  });
 
   // Function to fetch data from the API
   const fetchData = async () => {
@@ -56,6 +64,26 @@ const Dashboard = () => {
   // Use useEffect to fetch data on component mount
   useEffect(() => {
     fetchData(); // Initial data fetch
+  }, []); // Empty dependency array ensures this runs only once on mount
+
+  // Use useEffect to extract URL parameters
+  useEffect(() => {
+    const extractDataFromUrl = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const rice = urlParams.get('rice') || 0;
+      const wheat = urlParams.get('wheat') || 0;
+      const sugar = urlParams.get('sugar') || 0;
+
+      // alert("rice "+rice)
+
+      setUrlParams({
+        rice: parseInt(rice, 10),
+        wheat: parseInt(wheat, 10),
+        sugar: parseInt(sugar, 10)
+      });
+    };
+
+    extractDataFromUrl();
   }, []); // Empty dependency array ensures this runs only once on mount
 
   // Determine available items based on background color
@@ -163,6 +191,14 @@ const Dashboard = () => {
             </li>
           ))}
         </ul>
+      </div>
+
+      {/* Display URL parameters */}
+      <div className="url-params">
+        <h3>URL Parameters</h3>
+        <p><strong>Rice Ordered:</strong> {urlParams.rice} kg</p>
+        <p><strong>Wheat Ordered:</strong> {urlParams.wheat} kg</p>
+        <p><strong>Sugar Ordered:</strong> {urlParams.sugar} kg</p>
       </div>
     </div>
   );

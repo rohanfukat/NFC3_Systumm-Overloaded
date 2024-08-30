@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
-// import { useHistory } from 'react-router-dom'; // Assuming you're using react-router
+import { useNavigate } from 'react-router-dom'; // Assuming you're using react-router
 
 const Inventory = () => {
   // Initial static inventory data
@@ -9,6 +9,8 @@ const Inventory = () => {
     wheat: 300,
     sugar: 200,
   };
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // State to store ordered quantities fetched from the URL parameters
   const [ordered, setOrdered] = useState({ rice: 0, wheat: 0, sugar: 0 });
@@ -32,10 +34,15 @@ const Inventory = () => {
     fetchOrderedData();
   }, []);
 
-  // const handleNavigateToDashboard = () => {
-  //   const params = new URLSearchParams(ordered).toString();
-  //   history.push(`/dashboard?${params}`);
-  // };
+  
+  const handleNavigateToDashboard = () => {
+    const params = new URLSearchParams(ordered).toString();
+    navigate(`/dashboard?${params}`); // Use navigate to go to the Dashboard page
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   
 
 
@@ -49,9 +56,9 @@ const Inventory = () => {
   // Colors for the pie chart slices
   const COLORS = ['#0088FE', '#FFBB28'];
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <div>
@@ -121,9 +128,14 @@ const Inventory = () => {
             <Tooltip />
             <Legend />
           </PieChart>
+          <button onClick={handleNavigateToDashboard}>
+        Go to Dashboard
+      </button>
         </div>
       </div>
+      
     </div>
+    
   );
 };
 
