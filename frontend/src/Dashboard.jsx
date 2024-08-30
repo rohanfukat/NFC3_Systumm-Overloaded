@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { PriceContext } from './PriceContext'; 
+import { PriceContext } from './PriceContext';
+import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
 import './Dashboard.css';
 
 const endpoint = "http://localhost:8000/data"; // Endpoint for fetching data
 
 const Dashboard = () => {
   const { prices: contextPrices, setPrices } = useContext(PriceContext); // Use context to get and set prices
-  const [orderedItems, setOrderedItems] = useState([
-    { name: 'Rice', quantity: 5 } // Example of rice ordered
-  ]);
-  
+  const [orderedItems, setOrderedItems] = useState([]);
+
   const [data, setData] = useState(null); // State to store fetched data
   const [loading, setLoading] = useState(true); // Loading state
   const [userInfo, setUserInfo] = useState({
@@ -74,7 +73,12 @@ const Dashboard = () => {
       const wheat = urlParams.get('wheat') || 0;
       const sugar = urlParams.get('sugar') || 0;
 
-      // alert("rice "+rice)
+      // Update ordered items based on URL parameters
+      setOrderedItems([
+        { name: 'Rice', quantity: parseInt(rice, 10) },
+        { name: 'Wheat', quantity: parseInt(wheat, 10) },
+        { name: 'Sugar', quantity: parseInt(sugar, 10) }
+      ]);
 
       setUrlParams({
         rice: parseInt(rice, 10),
@@ -138,6 +142,14 @@ const Dashboard = () => {
     return <div>Loading...</div>; // Show loading state while data is being fetched
   }
 
+  // Prepare data for the pie chart
+  const chartData = Object.entries(prices).map(([itemName, { quantity }]) => ({
+    name: itemName,
+    total: quantity,
+    ordered: urlParams[itemName.toLowerCase()] || 0,
+    remaining: quantity - (urlParams[itemName.toLowerCase()] || 0)
+  }));
+
   return (
     <div className="dashboard-container">
       <h1 className="dashboard-heading">Dashboard</h1>
@@ -153,52 +165,41 @@ const Dashboard = () => {
       <Link to="/order" className="order-button">Order Now</Link>
 
       <div className="order-summary">
-        <div className="ordered-items">
-          <h3>Ordered Items</h3>
+        <h3>Order Summary</h3>
+        {chartData.map((data, index) => (
+          <div key={index} className="chart-container">
+            <h4>{data.name}</h4>
+            <PieChart width={300} height={300}>
+              <Pie
+                data={[
+                  { name: 'Ordered', value: data.ordered },
+                  { name: 'Remaining', value: data.remaining }
+                ]}
+                dataKey="value"
+                outerRadius={100}
+                fill="#8884d8"
+                label
+              >
+                <Cell key="1" fill="#FF8042" />
+                <Cell key="2" fill="#00C49F" />
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </div>
+        ))}
+        <div className="available-items">
+          <h3>Available Quantity</h3>
           <ul>
-            {orderedItems.length > 0 ? (
-              orderedItems.map((item, index) => (
-                <li key={index}>{item.name} - {item.quantity} kg</li>
-              ))
-            ) : (
-              <li>No items ordered yet</li>
-            )}
+            {Object.entries(prices).map(([itemName, { price, quantity }]) => (
+              <li key={itemName}>
+                {itemName} - Price: ₹{price} per kg
+                <br />
+                Available Quantity: {quantity} kg
+              </li>
+            ))}
           </ul>
         </div>
-
-        <div className="in-your-cart">
-          <h3>In Your Cart</h3>
-          <ul>
-            {orderedItems.length > 0 ? (
-              orderedItems.map((item, index) => (
-                <li key={index}>{item.name} - {item.quantity} kg</li>
-              ))
-            ) : (
-              <li>No items in your cart</li>
-            )}
-          </ul>
-        </div>
-      </div>
-
-      <div className="available-items">
-        <h3>Available Quantity</h3>
-        <ul>
-          {Object.entries(prices).map(([itemName, { price, quantity }]) => (
-            <li key={itemName}>
-              {itemName} - Price: ₹{price} per kg
-              <br />
-              Available Quantity: {quantity} kg
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Display URL parameters */}
-      <div className="url-params">
-        <h3>URL Parameters</h3>
-        <p><strong>Rice Ordered:</strong> {urlParams.rice} kg</p>
-        <p><strong>Wheat Ordered:</strong> {urlParams.wheat} kg</p>
-        <p><strong>Sugar Ordered:</strong> {urlParams.sugar} kg</p>
       </div>
     </div>
   );
