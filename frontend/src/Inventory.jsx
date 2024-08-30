@@ -1,50 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+// import { useHistory } from 'react-router-dom'; // Assuming you're using react-router
 
 const Inventory = () => {
   // Initial static inventory data
   const initialInventory = {
-    rice: 1000,
-    wheat: 500,
-    sugar: 700,
+    rice: 100,
+    wheat: 300,
+    sugar: 200,
   };
 
-  // State to store ordered quantities fetched from the backend
+  // State to store ordered quantities fetched from the URL parameters
   const [ordered, setOrdered] = useState({ rice: 0, wheat: 0, sugar: 0 });
   const [loading, setLoading] = useState(true); // Loading state to handle data fetching
 
-  // Fetch ordered data from backend when component mounts
+  // const history = useHistory()
+  // Fetch ordered data from URL parameters when the component mounts
   useEffect(() => {
+    const fetchOrderedData = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+
+      // Retrieve specific parameters and update the state
+      const rice = parseInt(urlParams.get('rice'), 10) || 0;
+      const wheat = parseInt(urlParams.get('wheat'), 10) || 0;
+      const sugar = parseInt(urlParams.get('sugar'), 10) || 0;
+
+      setOrdered({ rice, wheat, sugar });
+      setLoading(false); // Set loading to false after fetching the data
+    };
+
     fetchOrderedData();
   }, []);
 
-  const fetchOrderedData = async () => {
-    // try {
-    //   const response = await fetch('http://localhost:8000/process-payment'); // Adjust the endpoint as necessary
-    //   if (response.ok) {
-    //     const data = await response.json();
-    //     setOrdered(data.ordered);
-    //     console.log(data)
-        
-    //   } else {
-    //     console.error('Failed to fetch ordered data');
-    //   }
-    // } catch (error) {
-    //   console.error('Error fetching ordered data:', error);
-    // } finally {
-    //   setLoading(false);
-    const urlParams = new URLSearchParams(window.location.search);
+  // const handleNavigateToDashboard = () => {
+  //   const params = new URLSearchParams(ordered).toString();
+  //   history.push(`/dashboard?${params}`);
+  // };
+  
 
-        // Iterate over the parameters and display them
-        let dashboardParams = '';
-        urlParams.forEach((value, key) => {
-            dashboardParams += `${key}: ${value}`;
-        });
-      
-        console.log(urlParams.get("status"))
-    // }
-  };
- 
+
 
   // Prepare data for pie charts
   const prepareChartData = (item) => [

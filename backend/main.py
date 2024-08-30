@@ -276,24 +276,30 @@ async def update_order(id:str = Cookie(None),rice: str = Form(...), wheat: str =
     print(rice,wheat,sugar)
     user =  await ration_collection.find_one({"_id": ObjectId(id)})
     order = await orders_collection.find_one({"rationCardNumber":user["rationCardNumber"]})
-    data = {
-        "sugar": int(order["sugar"]) - int(sugar),
-        "rice" : int(order["rice"] )- int(rice),
-        "wheat" : int(order["wheat"]) - int(wheat)
-    }     
-    # Validataion is pending
-    print(order)
-    result = await orders_collection.update_one(
-        {"rationCardNumber": user["rationCardNumber"]},
-        {"$set": data}
-    )
-    if result.modified_count == 0:
-        raise HTTPException(status_code=500, detail="Failed to update order")
+    status  = (int(order["sugar"]) > int(sugar)) and (int(order["rice"]) > int(rice)) and (int(order["wheat"]) > int(wheat))
+    if not status:
+        print("failed")
+        raise HTTPException(status_code=404, detail="Failed to place order")
+    else:
+        data = {
+            "sugar": int(order["sugar"]) - int(sugar),
+            "rice" : int(order["rice"] )- int(rice),
+            "wheat" : int(order["wheat"]) - int(wheat)
+        }     
+        # Validataion is pending
+        print(order)
+        result = await orders_collection.update_one(
+            {"rationCardNumber": user["rationCardNumber"]},
+            {"$set": data}
+        )
+        print(result)
+        if result.modified_count == 0:
+            raise HTTPException(status_code=404, detail="Failed to update order")
 
-    return {"status": "success", "message": "Order updated successfully",
-            "sugar": sugar,
-            "rice" : rice,
-            "wheat" : wheat}
+        return {"status": "success", "message": "Order updated successfully",
+                "sugar": sugar,
+                "rice" : rice,
+                "wheat" : wheat}
 
     
 
