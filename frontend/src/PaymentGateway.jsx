@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { PriceContext } from './PriceContext'; // Import the PriceContext
 import './PaymentGateway.css';
 
 const PaymentGateway = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const order = location.state?.order;
+
+  // Get the prices object from PriceContext
+  const { prices } = useContext(PriceContext);
 
   const [paymentMethod, setPaymentMethod] = useState('');
   const [showProcessingCard, setShowProcessingCard] = useState(false);
@@ -19,7 +23,20 @@ const PaymentGateway = () => {
     return <div>No order data available. Please go back and place your order.</div>;
   }
 
-  const totalPrice = (order.rice * 3) + (order.wheat * 5) + (order.sugar * 6);
+  // Debugging output to check the values
+  console.log('Order data:', order);
+  console.log('Prices from context:', prices);
+
+  // Ensure all values are numeric before calculating the total price
+  const riceTotal = Number(order.rice) * (Number(prices.rice) || 0);
+  const wheatTotal = Number(order.wheat) * (Number(prices.wheat) || 0);
+  const sugarTotal = Number(order.sugar) * (Number(prices.sugar) || 0);
+  const totalPrice = riceTotal + wheatTotal + sugarTotal;
+
+  // Check if totalPrice is NaN
+  if (isNaN(totalPrice)) {
+    console.error('Total price is NaN. Check order data and prices from context.');
+  }
 
   const addresses = {
     mumbai: [
@@ -102,28 +119,26 @@ const PaymentGateway = () => {
 
   const handleConfirmPayment = async () => {
     try {
-      const data = new FormData()
-      data.append("rice",order.rice)
-      data.append("wheat",order.wheat)
-      data.append("sugar",order.sugar)
-      console.log(document.cookie)
-
+      const data = new FormData();
+      data.append('rice', order.rice);
+      data.append('wheat', order.wheat);
+      data.append('sugar', order.sugar);
+      console.log(document.cookie);
 
       // Send data to the backend
       const response = await fetch('http://localhost:8000/process-payment', {
         method: 'POST',
-        credentials : "include",
+        credentials: 'include',
         body: data,
       });
 
       if (response.ok) {
         const result = await response.json();
-        console.log(result)
+        console.log(result);
         alert('Payment successful!');
         const params = new URLSearchParams(result).toString();
-        window.location.href = `http://localhost:3000/inventory?${params}`
+        window.location.href = `http://localhost:3000/inventory?${params}`;
         // navigate('/dashboard');
-
       } else {
         alert('Payment failed. Please try again.');
       }
@@ -218,7 +233,7 @@ const PaymentGateway = () => {
 
         <div className="city-selection">
           <label htmlFor="city">Which city do you live in:</label>
-          <select id="city" value={selectedCity} onChange={handleCityChange} >
+          <select id="city" value={selectedCity} onChange={handleCityChange}>
             <option value="">Select a city</option>
             <option value="mumbai">Mumbai</option>
             <option value="navi-mumbai">Navi Mumbai</option>
@@ -240,7 +255,7 @@ const PaymentGateway = () => {
         <div className="processing-card">
           <h3>Processing Payment Information</h3>
           {paymentMethod === 'net-banking' && (
-            <div className="net-banking-details">
+            <div className="net-banking-form">
               <label>
                 Bank Name:
                 <input
@@ -262,7 +277,7 @@ const PaymentGateway = () => {
             </div>
           )}
           {paymentMethod === 'upi' && (
-            <div className="upi-details">
+            <div className="upi-form">
               <label>
                 UPI ID:
                 <input
@@ -274,7 +289,7 @@ const PaymentGateway = () => {
               </label>
             </div>
           )}
-          <button className="confirm-payment" onClick={handleSubmitPayment}>
+          <button className="submit-payment" onClick={handleSubmitPayment}>
             Submit
           </button>
         </div>
